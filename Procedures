@@ -1,0 +1,85 @@
+#Procedures
+//Insert Data
+
+create proc InsertData
+@name varchar(40),
+@rollno int,
+@class varchar(50),
+@gender int,
+@age int,
+@country int,
+@state int,
+@isactive Bit
+
+as 
+begin
+insert into tblStudents values(@name,@gender,@age,@country,@state,@isactive,@rollno,@class);
+end
+
+//Show Data
+
+create proc ShowData
+as
+begin
+select * from tblStudents Join tblGender on tblStudents.Gender=genderId 
+join tblCountry on tblStudents.Country=cid 
+Join tblState on tblStudents.State=stateID
+end
+
+//Delete Data
+
+create proc DeleteData
+@sid int
+as 
+begin
+delete from tblStudents where sid=@sid
+end
+
+//Edit Data
+
+create proc EditData
+@sid int
+as 
+begin
+select * from tblStudents where sid=@sid
+end
+
+//Update Data
+
+create proc UpdateData
+@id int,
+@rollno int,
+@class varchar(50),
+@name varchar(40),
+@gender int,
+@age int,
+@country int,
+@state int,
+@isactive Bit
+
+as 
+begin
+update tblStudents set name=@name,gender=@gender,rollno=@rollno, class=@class, age=@age,country=@country,state=@state,isactive=@isactive where sid=@id;
+end
+
+------------------------------------------------------------------------
+
+//Bind Country
+
+create proc BindCountry
+as
+begin
+select * from tblCountry;
+end
+
+// Bind State
+
+create proc BindState
+@cid int
+as 
+begin
+select * from tblState where cid = @cid;
+end
+
+
+
