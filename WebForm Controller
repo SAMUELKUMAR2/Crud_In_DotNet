@@ -1,0 +1,199 @@
+ SqlConnection con = new SqlConnection("data source=LAPTOP-05I2OQQ7; initial catalog=samuelWebform; integrated security=true");
+ protected void Page_Load(object sender, EventArgs e)
+ {
+     if (!IsPostBack)
+     {
+         BindGender();
+         BindCountry();
+     }
+     ShowData();
+ }
+
+ protected void gvusers_RowCommand(object sender, GridViewCommandEventArgs e)
+ {
+     if (e.CommandName == "A")
+     {
+         con.Open();
+         SqlCommand cmd = new SqlCommand("DeleteData", con);
+         cmd.CommandType = CommandType.StoredProcedure; ;
+         cmd.Parameters.AddWithValue("@sid",e.CommandArgument);
+         cmd.ExecuteNonQuery();
+         con.Close();
+         ShowData();
+     }
+     else if (e.CommandName == "B")
+     {
+         con.Open();
+         SqlCommand cmd = new SqlCommand("EditData", con);
+         cmd.CommandType = CommandType.StoredProcedure;
+         cmd.Parameters.AddWithValue("@sid", e.CommandArgument);
+         SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+         DataTable dt = new DataTable();
+         sqlDataAdapter.Fill(dt);
+         con.Close();
+         txtname.Text = dt.Rows[0]["name"].ToString();
+         txtrollno.Text = dt.Rows[0]["rollno"].ToString();
+         txtclass.Text = dt.Rows[0]["class"].ToString();
+         txtgender.Text = dt.Rows[0]["gender"].ToString();
+         txtage.Text = dt.Rows[0]["age"].ToString();
+         ddlCountry.SelectedValue = dt.Rows[0]["Country"].ToString();
+         isactive.Checked = (bool)dt.Rows[0]["isactive"];
+         BindState();
+         ddlState.SelectedValue = dt.Rows[0]["State"].ToString();
+       
+         ViewState["id"] = e.CommandArgument;
+
+     }
+ }
+
+ public void BindGender()
+ {
+     con.Open();
+     SqlCommand cmd = new SqlCommand("select * from tblGender", con);
+     SqlDataAdapter da = new SqlDataAdapter(cmd);
+     DataTable dt = new DataTable();
+     da.Fill(dt);
+     con.Close();
+     txtgender.DataValueField = "genderId";
+     txtgender.DataTextField = "genderName";
+     txtgender.DataSource = dt;
+
+     txtgender.DataBind();
+ }
+
+ public void BindCountry()
+ {
+     con.Open();
+     SqlCommand cmd = new SqlCommand("select * from tblCountry", con);
+     SqlDataAdapter da = new SqlDataAdapter(cmd);
+     DataTable dt = new DataTable();
+     da.Fill(dt);
+     con.Close();
+     ddlCountry.DataValueField = "cid";
+     ddlCountry.DataTextField = "cname";
+     ddlCountry.DataSource = dt;
+     ddlCountry.DataBind();
+     ddlCountry.Items.Insert(0, new ListItem("--select--", "0"));
+ }
+
+ protected void ddlCountry_SelectedIndexChanged(object sender, EventArgs e)
+ {
+
+     BindState();
+
+ }
+ public void BindState()
+ {
+     con.Open();
+     SqlCommand cmd = new SqlCommand("select * from tblState where cid='"+ddlCountry.SelectedValue+"'", con);
+     SqlDataAdapter da = new SqlDataAdapter(cmd);
+     DataTable dt = new DataTable();
+     da.Fill(dt);
+     con.Close();
+     ddlState.DataValueField = "StateID";
+     ddlState.DataTextField = "sname";
+     ddlState.DataSource = dt;
+     ddlState.DataBind();
+     ddlState.Items.Insert(0, new ListItem("--select--", "0"));
+ }
+
+ //Insert
+ protected void btnsubmit_Click(object sender, EventArgs e)
+ {
+         if (ddlCountry.SelectedValue == "0")
+         {
+             txtlabel.Text = "Please select one country";
+             return;
+         }
+
+     if (ddlState.SelectedValue == "0")
+     {
+         txtlabel.Text = "Please select one State";
+         return;
+     }
+     if (btnsubmit.Text == "Submit")
+     {
+
+         con.Open();
+         SqlCommand cmd = new SqlCommand("InsertData", con);
+         cmd.CommandType = CommandType.StoredProcedure;
+         cmd.Parameters.AddWithValue("@name",txtname.Text);
+         cmd.Parameters.AddWithValue("@class", txtclass.Text);
+         cmd.Parameters.AddWithValue("@rollno", txtrollno.Text);
+         cmd.Parameters.AddWithValue("@gender", txtgender.SelectedValue);
+         cmd.Parameters.AddWithValue("@age", txtage.Text);
+         cmd.Parameters.AddWithValue("@country", ddlCountry.SelectedValue);
+         cmd.Parameters.AddWithValue("@state", ddlState.SelectedValue);
+         cmd.Parameters.AddWithValue("@isactive", isactive.Checked);
+         cmd.ExecuteNonQuery();
+         con.Close();
+        
+         ShowData();
+         Clear();
+     }
+    
+     
+  }
+
+ //Show
+ public void ShowData()
+ {
+     con.Open();
+     SqlCommand cmd = new SqlCommand("ShowData", con);
+     cmd.CommandType = CommandType.StoredProcedure;
+     SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+     DataTable dt = new DataTable();
+     adapter.Fill(dt);
+     con.Close();
+     gvusers.DataSource = dt;
+     gvusers.DataBind();
+ }
+
+ protected void btnupdate_Click(object sender, EventArgs e)
+ {
+     if (btnupdate.Text == "Update")
+     {
+
+         con.Open();
+         SqlCommand cmd = new SqlCommand("UpdateData", con);
+         cmd.CommandType = CommandType.StoredProcedure;
+         cmd.Parameters.AddWithValue("@id", ViewState["id"]);
+         cmd.Parameters.AddWithValue("@name", txtname.Text);
+         cmd.Parameters.AddWithValue("@class", txtclass.Text);
+         cmd.Parameters.AddWithValue("@rollno", txtrollno.Text);
+         cmd.Parameters.AddWithValue("@gender", txtgender.SelectedValue);
+         cmd.Parameters.AddWithValue("@age", txtage.Text);
+         cmd.Parameters.AddWithValue("@country", ddlCountry.SelectedValue);
+         cmd.Parameters.AddWithValue("@state", ddlState.SelectedValue);
+         cmd.Parameters.AddWithValue("@isactive", isactive.Checked);
+
+         int rowsAffected = cmd.ExecuteNonQuery();
+
+         if (rowsAffected > 0)
+         {
+             txtlabel.Text = "Updated successfully!";
+         }
+         else
+         {
+             txtlabel.Text = "No record updated. Please check the details.";
+         }
+         con.Close();
+
+         ShowData();
+         Clear();
+     }
+
+
+ }
+
+ public void Clear()
+ {
+     txtname.Text = "";
+     txtage.Text = "";
+     txtrollno.Text = "";
+     txtclass.Text = "";
+     txtgender.ClearSelection();
+     ddlCountry.SelectedIndex = 0;
+     ddlState.SelectedIndex = 0;
+     isactive.Checked = false;
+ }
