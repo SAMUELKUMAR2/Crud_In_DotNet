@@ -1,0 +1,178 @@
+#Frotend for WebForm
+
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <center>
+                <table>
+                    <tr>
+                        <td>Name:</td>
+                        <td><asp:TextBox ID="txtname" runat="server" MaxLength="5">
+                            
+                            
+                            </asp:TextBox>
+                            <asp:RequiredFieldValidator  runat="server" ID="djfh"  ControlToValidate="txtname" ErrorMessage="please fill name" ValidationGroup="aa" Display="None" ></asp:RequiredFieldValidator>
+                             <asp:RegularExpressionValidator runat="server" ValidationGroup="aa" ValidationExpression="^[a-zA-Z ]*$" ErrorMessage="Please enter alphabet" ControlToValidate="txtname" ></asp:RegularExpressionValidator>
+                        </td>
+                    </tr>
+
+                        <tr>
+                            <td>RollNo:</td>
+                            <td>
+                                <asp:TextBox ID="txtrollno" runat="server" MaxLength="5">
+                                </asp:TextBox>
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator2" ControlToValidate="txtrollno" ErrorMessage="please fill rollno" ValidationGroup="aa" Display="None"></asp:RequiredFieldValidator>
+                                <asp:RegularExpressionValidator runat="server"  ControlToValidate="txtrollno" ValidationGroup="aa" ValidationExpression="^(0|[1-9][0-9]*)$" ErrorMessage="Please enter Numeric Value"></asp:RegularExpressionValidator>
+                            </td>
+                        </tr>
+
+                     <tr>
+                         <td>Class:</td>
+                         <td>
+                             <asp:TextBox ID="txtclass" runat="server" MaxLength="5">
+                             </asp:TextBox>
+                             <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator3" ControlToValidate="txtclass" ErrorMessage="please fill class" ValidationGroup="aa" Display="None"></asp:RequiredFieldValidator>
+                         </td>
+                     </tr>
+                     <tr>
+
+
+                         <td>Gender:</td>
+                         <td>
+                             <asp:RadioButtonList ID="txtgender" runat="server" RepeatColumns="3">
+                             </asp:RadioButtonList>
+                                 <asp:RequiredFieldValidator  runat="server" ID="rvgend"  ControlToValidate="txtgender" ErrorMessage="please fill Gender" ValidationGroup="aa"  Display="None"></asp:RequiredFieldValidator>
+                         </td>
+                     </tr>
+
+                    <tr>
+                        <td>Age:</td>
+                        <td>
+                            <asp:TextBox ID="txtage" runat="server"></asp:TextBox>
+                           <asp:RequiredFieldValidator  runat="server" ID="RequiredFieldValidator1"  ControlToValidate="txtage" ErrorMessage="please fill Age" ValidationGroup="aa" Display="None" ></asp:RequiredFieldValidator>
+
+                            <asp:RangeValidator ID="rvage" runat="server" ControlToValidate="txtage" MinimumValue="18" MaximumValue="100" ValidationGroup="aa" ErrorMessage="Please enter age b/w 18 and 100" Type="Integer"></asp:RangeValidator>
+                                    </td>
+
+                    </tr>
+
+                    <tr>
+                        <td>Country:</td>
+                        <td><asp:DropDownList ID="ddlCountry" runat="server" OnSelectedIndexChanged="ddlCountry_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList></td>
+                    </tr>
+
+                    <tr>
+                        <td>State:</td>
+                        <td><asp:DropDownList ID="ddlState" runat="server"></asp:DropDownList></td>
+                    </tr>
+                   
+                    <tr>
+                        <td>isActive:</td>
+                        <td><asp:CheckBox ID="isactive" runat="server" /></td>
+                    </tr>
+
+                     <tr>
+                         
+                         <td>
+                             <asp:Button ID="btnsubmit" runat="server" Text="Submit" ValidationGroup="aa" OnClick="btnsubmit_Click"></asp:Button>
+
+                         </td>
+                     
+                        
+                        <td>
+                            <asp:Button ID="btnupdate" runat="server" Text="Update" OnClick="btnupdate_Click"></asp:Button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:Label ID="txtlabel" ForeColor="red" runat="server"></asp:Label>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><asp:GridView ID="gvusers" runat="server" AutoGenerateColumns="False" OnRowCommand="gvusers_RowCommand" CellPadding="4" ForeColor="#333333" GridLines="None">
+                            <AlternatingRowStyle BackColor="White" />
+                            <Columns>
+                                <asp:TemplateField>
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="btndelete" runat="server" Text="Delete" CommandName="A" CommandArgument='<%# Eval("sid") %>' />
+                                        <asp:LinkButton ID="btnedit" runat="server" Text="Edit" CommandName="B" CommandArgument='<%# Eval("sid") %>' />
+
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Sid">
+                                    <ItemTemplate>
+                                        <%# Eval("sid") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Name">
+                                    <ItemTemplate>
+                                        <%# Eval("name") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Gender">
+                                    <ItemTemplate>
+                                        <%# Eval("genderName") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Roll No">
+                                    <ItemTemplate>
+                                        <%# Eval("rollno") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Class">
+                                    <ItemTemplate>
+                                        <%# Eval("class") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="Age">
+                                    <ItemTemplate>
+                                        <%# Eval("age") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="cname">
+                                    <ItemTemplate>
+                                        <%# Eval("cname") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="sname">
+                                    <ItemTemplate>
+                                        <%# Eval("sname") %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+
+                                <asp:TemplateField HeaderText="IsActive">
+                                    <ItemTemplate>
+                                        <%# (bool)Eval("isactive")?"Yes":"No" %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                
+                              
+                                   
+                            </Columns>
+                            <EditRowStyle BackColor="#2461BF" />
+                            <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                            <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+                            <RowStyle BackColor="#EFF3FB" />
+                            <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+                            <SortedAscendingCellStyle BackColor="#F5F7FB" />
+                            <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+                            <SortedDescendingCellStyle BackColor="#E9EBEF" />
+                            <SortedDescendingHeaderStyle BackColor="#4870BE" />
+                            </asp:GridView></td>
+                    </tr>
+                    <asp:ValidationSummary runat="server" ValidationGroup="aa" ShowMessageBox="true" ShowSummary="false" ForeColor="Red" />
+                   
+                </table>
+              
+            </center>
+        </div>
+    </form>
+</body>
